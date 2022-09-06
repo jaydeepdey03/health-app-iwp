@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    //schema for prescription
+    prescriptionId: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     patientId: {
         type: String,
         required: true
     },
     patientName: {
         type: String,
-        required: true
+        required: truex
     },
     doctorId: {
         type: String,
@@ -20,10 +24,19 @@ const schema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: true
+        // required: true
     },
     medicines: {
-        type: [{type: String}],
+        medicineDetails:[{
+            dosage: {
+                type: String,
+                required: true,
+            },
+            medicineName: {
+                type: String,
+                required: true,
+            },
+        }],
         required: true
     },
     tests: {
@@ -38,4 +51,8 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
-}, {timestamps: true});
+}, { timestamps: true });
+
+const Prescription = mongoose.model('Prescription', schema);
+
+module.exports = Prescription;

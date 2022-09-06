@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
+require('dotenv').config()
 
-const MONGO_URI = 'mongodb+srv://jaydeepdey03:test123@cluster0.y7179.mongodb.net/iwp';
-
+const MONGO_URI = process.env.MONGO_URI
 
 module.exports = async function connectToDB(){
     try {

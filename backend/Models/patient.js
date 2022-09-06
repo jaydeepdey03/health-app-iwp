@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    //schema for patient
     patientId: {
         type: String,
         required: true
@@ -30,10 +29,6 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
-    patientPassword: {
-        type: String,
-        required: true
-    },
     patientBloodGroup: {
         type: String,
         required: true
@@ -51,10 +46,26 @@ const schema = new mongoose.Schema({
         required: true
     },
     patientMedicalHistory: {
-        type: [{type: String}],
-        required: true
+        disease: [
+            {
+                nameOfDisease: { type: String, required: true },
+                typeOfDisease: { type: String, required: true },
+                dateOfDiagnosis: { type: Date, required: true },
+            },
+        ]
     },
-}, {timestamps: true});
+    prescription:{
+        patientPrescription:[{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Prescription',
+        }]
+    },
+    role: {
+        type: Number,
+        required: true,
+        default: 1419,
+    },
+}, { timestamps: true });
 
 const Patient = mongoose.model('Patient', schema);
 
