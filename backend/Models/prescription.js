@@ -40,7 +40,7 @@ const schema = new mongoose.Schema({
         required: true
     },
     tests: {
-        type: String,
+        type: [String],
         required: true
     },
     symptoms: {

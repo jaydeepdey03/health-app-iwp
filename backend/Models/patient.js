@@ -54,10 +54,10 @@ const schema = new mongoose.Schema({
             },
         ]
     },
-    prescription:{
-        patientPrescription:[{
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Prescription',
+    prescription: {
+        patientPrescription: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Prescription',
         }]
     },
     role: {

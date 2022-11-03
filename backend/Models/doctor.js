@@ -12,25 +12,11 @@ const schema = new mongoose.Schema({
     },
     doctorAge: {
         type: Number,
-        required: true
     },
     doctorGender: {
-        type: String,
-        required: true
-    },
-    doctorAddress: {
-        type: String,
-        required: true
-    },
-    doctorPhone: {
-        type: Number,
-        required: true
+    type: String,
     },
     doctorEmail: {
-        type: String,
-        required: true
-    },
-    doctorPassword: {
         type: String,
         required: true
     },
@@ -74,7 +60,13 @@ const schema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 1419,
-    }
+    },
+    appointment: {
+        doctorAppointment: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Appointment',
+        }]
+    },
 }, { timestamps: true });
 
 const Doctor = mongoose.model('Doctor', schema);
