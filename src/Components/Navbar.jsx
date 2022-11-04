@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import './Navbar.css'
 
 const Navbar = () => {
@@ -30,7 +32,9 @@ const Navbar = () => {
                     <li class="border-t md:border-none">
                         <a href="/blog/" class="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker">Blog</a>
                     </li>
-
+                    <li>
+                        <Link to="/doctor/login" class="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker">Login</Link>
+                    </li>
                 </ul>
             </nav>
         </>

@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('config');
-const Patient = require('../models/Patient');
+require('dotenv').config();
 
 async function verifyPatient(req, res, next) {
     // Get token from header
