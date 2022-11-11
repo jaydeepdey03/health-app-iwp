@@ -1,6 +1,7 @@
-const User = require('../models/user');
+const User = require('../Models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
 
 const register = (req, res) => {
     const { name, email, password, role } = req.body;
@@ -12,7 +13,7 @@ const register = (req, res) => {
     }
     // validation passed
     User.findOne({ email })
-        .then(user => {
+        .then(async (user) => {
             if (user) {
                 // user exists
                 errors.push({ msg: 'Email is already registered' });
@@ -22,78 +23,64 @@ const register = (req, res) => {
                     name,
                     email,
                     password,
-                    role
                 });
+                await user.save()
 
-                // hash password
-                bcrypt.genSalt(10, (err, salt) =>
-                    bcrypt.hash(user.password, salt, (err, hash) => {
-                        if (err) throw err;
-                        // set password to hashed
-                        user.password = hash;
-                        // save user
-                        user.save()
-                            .then(user => {
-                                jwt.sign(
-                                    { id: user.id },
-                                    process.env.JWT_SECRET,
-                                    { expiresIn: 3600 },
-                                    (err, token) => {
-                                        if (err) throw err;
-                                        res.json({
-                                            token,
-                                            user: {
-                                                id: user.id,
-                                                name: user.name,
-                                                email: user.email,
-                                                role: user.role
-                                            }
-                                        });
-                                    }
-                                )
-                            })
-
-                    }))
+                res.status(200).json({ msg: 'User registered' });
             }
         })
 }
 
-const login = (req, res) => {
+const login = (req, res, next) => {
     const { email, password } = req.body;
-    User.findOne({ email }, (err, user) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
-        if (!user) {
-            return res.status(404).send({ message: "User Not found." });
-        }
-        let passwordIsValid = bcrypt.compareSync(
-            password,
-            user.password
-        );
-        if (!passwordIsValid) {
-            return res.status(401).send({
-                accessToken: null,
-                message: "Invalid Password!"
-            });
-        }
-        // explain the line below
-        let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-            expiresIn: 86400 // 24 hours
-        });
+    let errors = [];
+    if (!email || !password) {
+        errors.push({ msg: 'Please fill in all fields' });
+        res.status(400).json({ errors });
+    }
+    User.findOne({ email })
+        .then(user => {
+            if (!user) {
+                errors.push({ msg: 'Email is not registered' });
+                res.status(400).json({ errors });
+            } else {
+                bcrypt.compare(password, user.password, async (err, isMatch) => {
+                    if (err) throw err;
+                    if (isMatch) {
+                        const accessToken = jwt.sign({ "Userinfo": { "username": user.name, "roles": user.role} }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m' });
+                        const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
-        res.status(200).send({
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            accessToken: token,
-            role: user.role
-        });
-    });
+                        // add refreshToken in mongodb
+                        await User.findOneAndUpdate({ _id: user._id }, { refreshToken: refreshToken })
+                        res.cookie('refreshToken', refreshToken, { maxAge: 1000 * 60 * 60 * 24, sameSite: 'none' });
+                        res.status(200).json({ accessToken: accessToken });
+                    } else {
+                        errors.push({ msg: 'Password is incorrect' });
+                        res.status(400).json({ errors });
+                    }
+                })
+            }
+        })
+}
+
+const logout = (req, res) => {
+    const cookies = req.cookies;
+    if (!cookies?.refreshToken) res.status(204).json({ msg: 'No cookies' });
+    const refreshToken = cookies.refreshToken;
+    User.findOneAndUpdate({ refreshToken }, { refreshToken: '' }, (err, doc) => {
+        if (err) {
+            res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'none', secure: true });
+            res.status(500).json({ msg: 'Something went wrong' })
+        }
+        // maxAge need not be set during clearCookie
+        res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'none', secure: true });
+        res.status(200).json({ msg: 'Logged out' });
+    })
+
 }
 
 module.exports = {
     register,
-    login
+    login,
+    logout
 }

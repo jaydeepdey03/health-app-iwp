@@ -1,28 +1,19 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-async function verifyPatient(req, res, next) {
-    // Get token from header
-    const token = req.header('x-auth-token');
-
-    // Check if not token
-    if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
-    }
-
-    // Verify token
-    try {
-        jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
-            if (err) {
-                return res.status(401).json({ msg: 'Token is not valid' });
-            } else {
-                req.patient = decoded.patient;
-                next();
-            }
-        });
-    } catch (err) {
-        res.status(401).json({ msg: 'Token is not valid' });
+const verify = (req, res, next) => {
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    if(authHeader) {
+        const token = authHeader.split(' ')[1];
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if(err)  return res.status(403).json({ msg: 'Token is not valid' });
+            req.user = user.userInfo.username;
+            req.roles = user.userInfo.roles
+            next();
+        })
+    } else {
+        return res.status(401).json({ msg: 'You are not authenticated' });
     }
 }
 
-module.exports = verifyPatient;
+module.exports = verify;

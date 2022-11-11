@@ -59,7 +59,7 @@ const schema = new mongoose.Schema({
     role: {
         type: Number,
         required: true,
-        default: 1419,
+        default: 2001,
     },
     appointment: {
         doctorAppointment: [{

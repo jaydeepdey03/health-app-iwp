@@ -1,4 +1,7 @@
-module.exports = {
-    "Doctor": 1419,
-    "Patient": 1420,
+const roleList = {
+    "Admin": 1000,
+    "User": 2000,
+    "Editor": 3000
 }
+
+module.expors = roleList

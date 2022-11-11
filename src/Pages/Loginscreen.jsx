@@ -1,21 +1,14 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Context } from "../context/Usercontext";
 
 const Loginscreen = () => {
-    const { formData, setFormData, login } = useContext(Context)
+
+    const { formData, handleFormSubmit, setFormData } = useContext(Context)
     
-    // handle form data
     const handleFormData = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-    // handle form submit
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        login();
-    };
 
-
-    // fetch auth from context
 
     return (
         <div className="flex justify-center items-center h-screen">
@@ -24,7 +17,7 @@ const Loginscreen = () => {
                 <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                            Username
+                            Email
                         </label>
                         <input name="email" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username" onChange={handleFormData} />
                     </div>
