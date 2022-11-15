@@ -4,4 +4,4 @@ const roleList = {
     "Editor": 3000
 }
 
-module.expors = roleList
+module.exports = roleList

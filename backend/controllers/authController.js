@@ -23,6 +23,7 @@ const register = (req, res) => {
                     name,
                     email,
                     password,
+                    role
                 });
                 await user.save()
 
@@ -32,6 +33,8 @@ const register = (req, res) => {
 }
 
 const login = (req, res, next) => {
+    // check if cookie is set which means some user is already logged in 
+    if (req.cookies.refreshToken) res.status(400).json({ msg: 'You are already logged in' });
     const { email, password } = req.body;
     let errors = [];
     if (!email || !password) {
@@ -47,12 +50,19 @@ const login = (req, res, next) => {
                 bcrypt.compare(password, user.password, async (err, isMatch) => {
                     if (err) throw err;
                     if (isMatch) {
-                        const accessToken = jwt.sign({ "Userinfo": { "username": user.name, "roles": user.role} }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m' });
-                        const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+                        const accessToken = jwt.sign(
+                            {
+                                userInfo: {
+                                    name: user.name,
+                                    role: user.role 
+                                },
+                            }
+                            , process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+                        const refreshToken = jwt.sign({ name: user.name }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
-                        // add refreshToken in mongodb
+                        // adding a refreshToken in mongodb
                         await User.findOneAndUpdate({ _id: user._id }, { refreshToken: refreshToken })
-                        res.cookie('refreshToken', refreshToken, { maxAge: 1000 * 60 * 60 * 24, sameSite: 'none' });
+                        res.cookie('refreshToken', refreshToken, { maxAge: 1000 * 60 * 60 * 24, sameSite: 'none', secure: true });
                         res.status(200).json({ accessToken: accessToken });
                     } else {
                         errors.push({ msg: 'Password is incorrect' });

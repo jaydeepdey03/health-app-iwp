@@ -15,7 +15,7 @@ app.post('/api/register',  authController.register);
 
     app.get('/api/refresh', require('../controllers/refreshToken').handleRefreshToken)
 
-    app.get('/api/getUser', verify, verifyRoles(roleList.User), (req, res) => {
+    app.get('/api/getUser', verify, verifyRoles(roleList.Editor, roleList.Admin), (req, res) => {
         res.status(200).json({ msg: 'Allowed to access the route' })
     })
 

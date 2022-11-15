@@ -13,7 +13,12 @@ const handleRefreshToken = async (req, res) => {
     // evalutate jwt
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) res.status(403).json({ msg: 'Invalid token' });
-        const accessToken = jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m' });
+        const accessToken = jwt.sign({
+            userInfo: {
+                name: user.name,
+                role: user.role 
+            },
+        }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m' });
         res.status(200).json({ accessToken: accessToken });
     })
 

@@ -16,22 +16,6 @@ const Usercontext = ({ children }) => {
         password: "",
     });
 
-    // useEffect(() => {
-    //     const login = async () => {
-    //         const response = await fetch("http://localhost:5000/api/login", {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             credentials: "include",
-    //             body: JSON.stringify({
-    //                 "email": "benoy@mail.com",
-    //                 "password": "test"
-    //             })
-    //         })
-    //         console.log(await response.json())
-    //     }
-    //     login()
-    // }, [])
-
     // handle form submit
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -39,6 +23,9 @@ const Usercontext = ({ children }) => {
             const response = await axios.post('http://localhost:5000/api/login', {
                 "email": formData.email,
                 "password": formData.password
+            }
+            , {
+                withCredentials: true
             });
             console.log(response.data)
         }
