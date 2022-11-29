@@ -4,11 +4,11 @@ import Loginscreen from "./Pages/Loginscreen";
 import Unauthorised from "./Components/Unauthorised";
 import UserProvider from "./context/Usercontext";
 import Admin from "./Pages/Admin";
-import Userscreen from "./Pages/Userscreen";
 import Layout from "./Layout";
 import Registerscreen from "./Pages/Registerscreen";
 import Missing from "./Missing";
 import RequireAuth from "./RequireAuth";
+import EditorScreen from "./Pages/EditorScreen";
 
 function App() {
 
@@ -16,16 +16,25 @@ function App() {
     <UserProvider>
       <Routes>
         <Route path="/" element={<Layout />} >
-          <Route path="/" element={<Home />} />
-          {/* Public Routes */}
+
+          {/* Any User can access with user role */}
+          <Route element={<RequireAuth allowedRoles={[2000]} />}>
+            <Route path="/" element={<Home />} />
+          </Route>
+
+          {/* Public Routes (without logged in) */}
           <Route path="/login" element={<Loginscreen />} />
           <Route path="/unauthorised" element={<Unauthorised />} />
           <Route path="/register" element={<Registerscreen />} />
 
-          {/* Protected Routes */}
-          <Route element={<RequireAuth /> }>
+          {/* Protected Routes (Admin) */}
+          <Route element={<RequireAuth allowedRoles={[1000]} />}>
             <Route path="/admin" element={<Admin />} />
-            <Route path="/user" element={<Userscreen />} />
+          </Route>
+
+          {/* Protected Routes(Editor) */}
+          <Route element={<RequireAuth allowedRoles={[3000]} />}>
+            <Route path="/editor" element={<EditorScreen />} />
           </Route>
 
           {/* Catch all */}

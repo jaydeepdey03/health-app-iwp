@@ -10,6 +10,7 @@ const Loginscreen = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const { logout } = useAuth()
 
     return (
         <>
@@ -43,6 +44,9 @@ const Loginscreen = () => {
                     <p className="text-center text-gray-500 text-xs">
                         &copy;2020 Acme Corp. All rights reserved.
                     </p>
+                    <button onClick={() => logout()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Logout
+                    </button>
                 </div>
             </div>
         </>

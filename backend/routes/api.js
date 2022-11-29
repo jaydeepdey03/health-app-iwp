@@ -3,12 +3,12 @@ require('dotenv').config()
 const verify = require('../middleware/verify');
 const roleList = require('../config/role')
 const verifyRoles = require('../middleware/verifyRoles')
-
-
+const router = require('express').Router();
 
 const api = (app) => {
 
-app.post('/api/register',  authController.register);
+
+    app.post('/api/register', authController.register);
 
 
     app.post('/api/login', authController.login)
@@ -19,7 +19,6 @@ app.post('/api/register',  authController.register);
         res.status(200).json({ msg: 'Allowed to access the route' })
     })
 
-    app.get('/api/logout', authController.logout) 
+    app.get('/api/logout', authController.logout)
 }
-
 module.exports = api;

@@ -8,6 +8,7 @@ const verify = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded)=> {
         if(err) return res.status(403).json({ msg: 'Invalid token' });
         req.role = decoded.userInfo.role
+        console.log(req.role)
         next()
     })
 }

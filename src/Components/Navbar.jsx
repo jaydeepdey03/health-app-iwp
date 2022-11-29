@@ -5,7 +5,7 @@ import { UserContext } from '../context/Usercontext'
 
 const Navbar = () => {
     
-    const { isAuth, logout } = useContext(UserContext)
+    const { auth, logout } = useContext(UserContext)
 
     return (
         <>
@@ -21,17 +21,17 @@ const Navbar = () => {
 
                 <ul className="menu border-b md:border-none flex justify-end list-reset m-0 w-full md:w-auto">
                     <li className="border-t md:border-none">
-                        <a href="/" className="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker font-bold">Home</a>
+                        <Link to="/" class Name="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker font-bold">Home</Link>
                     </li>
 
                     <li className="border-t md:border-none">
-                        <a href="/about/" className="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker">About</a>
+                        <Link to="/admin" className="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker">Admin</Link>
                     </li>
 
                     <li className="border-t md:border-none">
-                        <a href="/blog/" className="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker">Blog</a>
+                        <Link to="/editor" className="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker">Editor</Link>
                     </li>
-                    {!isAuth ? <li>
+                    {!auth?.email ? <li>
                         <Link to="/login" className="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker">Login</Link>
                     </li> :
                         <li>
