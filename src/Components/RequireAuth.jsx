@@ -1,12 +1,12 @@
 import { useContext } from "react"
 import { useLocation, Navigate, Outlet } from "react-router-dom"
-import { Context } from "../context/Usercontext"
+import { UserContext } from "../context/Usercontext"
 
 const RequireAuth = ({ allowedRoles }) => {
 
     const location = useLocation()
     // fetch from context
-    const { auth, isAuth } = useContext(Context)
+    const { auth, isAuth } = useContext(UserContext)
 
     return (
         isAuth

@@ -8,7 +8,7 @@ const register = (req, res) => {
     let errors = [];
 
     // check required fields
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password) {
         res.status(400).json({ msg: 'Please fill in all fields' });
     }
     // validation passed
@@ -54,7 +54,7 @@ const login = (req, res, next) => {
                             {
                                 userInfo: {
                                     name: user.name,
-                                    role: user.role 
+                                    role: user.role
                                 },
                             }
                             , process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
@@ -62,8 +62,8 @@ const login = (req, res, next) => {
 
                         // adding a refreshToken in mongodb
                         await User.findOneAndUpdate({ _id: user._id }, { refreshToken: refreshToken })
-                        res.cookie('refreshToken', refreshToken, { maxAge: 1000 * 60 * 60 * 24, sameSite: 'none', secure: true });
-                        res.status(200).json({ accessToken: accessToken });
+                        res.cookie('refreshToken', refreshToken, { maxAge: 1000 * 60 * 60 * 24, sameSite: 'none', httpOnly: true, secure: true });
+                        res.status(200).json({ role: user.role, accessToken: accessToken });
                     } else {
                         errors.push({ msg: 'Password is incorrect' });
                         res.status(400).json({ errors });

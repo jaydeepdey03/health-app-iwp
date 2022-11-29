@@ -21,33 +21,12 @@ const user = new mongoose.Schema({
     refreshToken: {
         type: String,
     },
+    // array of role
     role: {
-        type: Number,
-        required: true
-    }
+        type: Array,
+        default: [2000]
+    },
 }, { timestamps: true });
 
-user.pre('save', async function (next) {
-    try {
-        if (this.isNew) {
-            const salt = await bcrypt.genSalt(10)
-            const passwordHash = await bcrypt.hash(this.password, salt)
-            this.password = passwordHash
-        }
-        next()
-    } catch (error) {
-        next(error)
-    }
-})
-
-user.methods = {
-    matchPassword: async function (password) {
-        try {
-            return await bcrypt.compare(password, this.password);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-}
 
 module.exports = mongoose.model('User', user);

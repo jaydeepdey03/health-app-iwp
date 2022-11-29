@@ -1,10 +1,11 @@
 const verifyRoles = (...allowedRoles) => {
     return (req, res, next) => {
-        if(!req?.role) return res.status(401).json({ msg: 'You are not authenticated' });
-        if(!allowedRoles.includes(req.role)) return res.status(403).json({ msg: 'You are not authorized' });
+        if (!req?.role) return res.status(401).json({ msg: 'You are not authenticated' });
         const rolesArray = [...allowedRoles]
-        console.log(rolesArray)
         console.log(req.role)
+        const result = req.roles.map(role => rolesArray.includes(role)).find(val => val === true);
+        console.log(result)
+        // if (!result) return res.status(401).json({ msg: 'You are not authorized to access this route' });
         next();
     }
 }

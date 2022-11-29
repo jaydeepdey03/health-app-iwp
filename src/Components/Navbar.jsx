@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useContext } from 'react'
 import './Navbar.css'
-import { Context } from '../context/Usercontext'
+import { UserContext } from '../context/Usercontext'
 
 const Navbar = () => {
     
-    const { isAuth, logout } = useContext(Context)
+    const { isAuth, logout } = useContext(UserContext)
 
     return (
         <>
