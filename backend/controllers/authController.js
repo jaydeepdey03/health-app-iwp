@@ -57,8 +57,8 @@ const login = (req, res, next) => {
                                     role: user.role
                                 },
                             }
-                            , process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-                        const refreshToken = jwt.sign({ name: user.name }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+                            , process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
+                        const refreshToken = jwt.sign({ name: user.name, role: user.role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
 
                         // adding a refreshToken in mongodb
                         await User.findOneAndUpdate({ _id: user._id }, { refreshToken: refreshToken })

@@ -22,12 +22,17 @@ const useAxiosPrivate = () => {
         const reponseIntercept = axiosPrivate.interceptors.response.use(
             response => response,
             async error => {
-                const originalRequest = error.config;
-                if (error.response.status === 401 && !originalRequest._retry) {
-                    originalRequest._retry = true;
-                    const accessToken = await refresh()
-                    axiosPrivate.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
-                    return axiosPrivate(originalRequest);
+                const prevRequest = error?.config;
+                // console.log("1")
+                if (error?.response?.status === 403 && !prevRequest?.sent) {
+                    const newAccessToken = await refresh()
+                    // console.log(prevRequest);
+                    // console.log("2")
+                    return axiosPrivate({
+                        ...prevRequest,
+                        headers: { ...prevRequest.headers, Authorization: `Bearer ${newAccessToken}` },
+                        sent: true
+                    });
                 }
                 return Promise.reject(error);
             }

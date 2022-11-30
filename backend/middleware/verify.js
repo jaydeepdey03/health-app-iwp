@@ -7,8 +7,9 @@ const verify = (req, res, next) => {
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded)=> {
         if(err) return res.status(403).json({ msg: 'Invalid token' });
+        console.log(decoded)
         req.role = decoded.userInfo.role
-        console.log(req.role)
+        // console.log(req.role)
         next()
     })
 }

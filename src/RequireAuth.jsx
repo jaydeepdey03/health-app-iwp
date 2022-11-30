@@ -6,8 +6,6 @@ const RequireAuth = ({ allowedRoles }) => {
     const { auth } = useAuth()
     const location = useLocation()
 
-    console.log(auth?.role)
-
     return (
         <div>
             {auth?.role?.find(role1 => allowedRoles.includes(role1))

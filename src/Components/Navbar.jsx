@@ -21,7 +21,7 @@ const Navbar = () => {
 
                 <ul className="menu border-b md:border-none flex justify-end list-reset m-0 w-full md:w-auto">
                     <li className="border-t md:border-none">
-                        <Link to="/" class Name="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker font-bold">Home</Link>
+                        <Link to="/" className="block md:inline-block px-4 py-3 no-underline text-grey-darkest hover:text-grey-darker font-bold">Home</Link>
                     </li>
 
                     <li className="border-t md:border-none">
