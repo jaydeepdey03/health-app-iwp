@@ -1,15 +1,22 @@
 
 import Navbar from "../Components/Navbar"
-import useAuth from "../hooks/useAuth"
+import useLogout from "../hooks/useLogout"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
+import { useNavigate } from "react-router-dom"
 
 const Home = () => {
-    const { logout, auth } = useAuth()
+    const logout = useLogout()
     const axiosPrivate = useAxiosPrivate()
+    const navigate = useNavigate()
 
     async function getUser(){
         const response = await axiosPrivate.get('/getUser')
         console.log(response)
+    }
+
+    const signOut = async ()=> {
+        await logout()
+        navigate('/login')
     }
 
     return (
@@ -20,7 +27,7 @@ const Home = () => {
                 <button onClick={()=>getUser()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Get Users
                 </button>
-                <button onClick={()=>logout()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <button onClick={()=>signOut()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Logout
                 </button>
             </div>

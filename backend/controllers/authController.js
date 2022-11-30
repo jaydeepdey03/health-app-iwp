@@ -34,7 +34,6 @@ const register = (req, res) => {
 
 const login = (req, res, next) => {
     // check if cookie is set which means some user is already logged in 
-    if (req.cookies.refreshToken) res.status(400).json({ msg: 'You are already logged in' });
     const { email, password } = req.body;
     let errors = [];
     if (!email || !password) {
@@ -57,8 +56,8 @@ const login = (req, res, next) => {
                                     role: user.role
                                 },
                             }
-                            , process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
-                        const refreshToken = jwt.sign({ name: user.name, role: user.role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
+                            , process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+                        const refreshToken = jwt.sign({ name: user.name, role: user.role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '15s' });
 
                         // adding a refreshToken in mongodb
                         await User.findOneAndUpdate({ _id: user._id }, { refreshToken: refreshToken })

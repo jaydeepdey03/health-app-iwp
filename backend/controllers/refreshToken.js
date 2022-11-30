@@ -12,14 +12,15 @@ const handleRefreshToken = async (req, res) => {
     if (!person) res.status(401).json({ msg: 'No person' });
     // evalutate jwt
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        const role = Object.values(user.role)
         if (err) res.status(403).json({ msg: 'Invalid token' });
         const accessToken = jwt.sign({
             userInfo: {
                 name: user.name,
                 role: user.role
             },
-        },process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
-        res.status(200).json({ accessToken: accessToken });
+        }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+        res.status(200).json({ accessToken: accessToken, role: role });
     })
 
 }
