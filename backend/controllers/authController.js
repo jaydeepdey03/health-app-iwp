@@ -19,15 +19,16 @@ const register = (req, res) => {
                 errors.push({ msg: 'Email is already registered' });
                 res.status(400).json({ errors });
             } else {
-                const user = new User({
-                    name,
-                    email,
-                    password,
-                    role
-                });
-                await user.save()
-
-                res.status(200).json({ msg: 'User registered' });
+                // hash the password and store it
+                const hashedPwd = await bcrypt.hash(password, 10);
+                User.create({
+                    name: name, 
+                    email: email,
+                    password: hashedPwd
+                }, (err, decoded)=>{
+                    if(err)res.json({msg: err.message})
+                    res.json({decoded: decoded})
+                })
             }
         })
 }
@@ -56,8 +57,8 @@ const login = (req, res, next) => {
                                     role: user.role
                                 },
                             }
-                            , process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
-                        const refreshToken = jwt.sign({ name: user.name, role: user.role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '15s' });
+                            , process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+                        const refreshToken = jwt.sign({ name: user.name, role: user.role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
 
                         // adding a refreshToken in mongodb
                         await User.findOneAndUpdate({ _id: user._id }, { refreshToken: refreshToken })

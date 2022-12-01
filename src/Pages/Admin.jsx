@@ -1,9 +1,7 @@
 import { useNavigate } from "react-router-dom"
-import useAxiosPrivate from "../hooks/useAxiosPrivate"
 
 const Admin = () => {
     const navigate = useNavigate()
-    const axiosPrivate = useAxiosPrivate()
     const goBack = () => navigate(-1)
 
     return (
