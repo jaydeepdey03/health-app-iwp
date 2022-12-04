@@ -34,7 +34,6 @@ const register = (req, res) => {
 }
 
 const login = (req, res, next) => {
-    // check if cookie is set which means some user is already logged in 
     const { email, password } = req.body;
     let errors = [];
     if (!email || !password) {
